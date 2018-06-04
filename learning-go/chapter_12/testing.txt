@@ -1,0 +1,27 @@
+Testing
+
+Programming is not easy; even the best programmers are incapable of 
+writing programs that work exactly as intended every time. Therefore,
+an important part of the software development process is testing. 
+Writing tests for our code is a good way to ensure quality and 
+improve reliability.
+
+Go includes a special program that makes writing tests easier.
+
+The 'go test' command will look for any tests in any of the files
+in the current folder and run them. Tests are identified by starting
+a function with the word 'Test' and taking one argument of type
+'*testing.T'. In our case since we're testing the 'Average' function
+we name the test function 'TestAverage'.
+
+Once we have the testing function setup, we write tests that use 
+the code we're testing. In this case we know the average of [1, 2]
+should be 1.5 so that's what we check. It's probably a good idea 
+to test many different combinations of numbers. We can change our 
+test program for this purpose.
+
+This is a very common way to setup tests (abundant examples can 
+be found in the source code for the packages included with Go).
+We create a 'struct' to represent the inputs and outputs of the 
+function. Then we create a list of these 'struct's (pairs). Then 
+we loop through each one and run the function.

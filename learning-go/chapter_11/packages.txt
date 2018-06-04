@@ -1,0 +1,90 @@
+Go was designed to be a language that encourages good software 
+engineering practices. An important part of high quality software 
+is code reuse - embodied in the principle "Don't Repeat Yourself."
+
+Functions are the first layer of code reuse. Another mechanism
+for code reuse are packages. Nearly every program we have written
+had the line:
+
+		import "fmt"
+
+'fmt' is the name of a package that includes a variety of functions
+related to formatting and output to the screen. Bundling code is 
+this way serves 3 purposes:
+
+	1. 	It reduces the chance of having overlapping names. This keeps
+		function names short and succinct.
+
+	2. 	It organizes code so that its easier to find code we want to 
+		reuse.
+
+	3. 	It speeds up the compiler by only requiring recompilation of 
+		smaller chunks of a program. Although we use the package 'fmt',
+		we don't have to recompile it every time we change our program.
+
+Creating Packages
+A few things to note:
+
+	1.	'math' is the name of a package that is part of Go's standard
+		distribution, but since Go packages can be hierarchical we are 
+		safe to use the same name for our package. (The real 'math' 
+		package is just 'math', ours is 'chapter_11/math'.)
+
+	2.	When we import our math library we use its full name:
+			
+			import "chapter_11/math"
+
+		but inside of 'math.go' file we only use the last part of the 
+		name ('package math').
+
+	3. 	We also only use the short name 'math' when we reference functions
+		from our library. If we wanted to use both libraries in the same
+		program, Go allows us to use and alias:
+
+			import m "chapter_11/math"
+
+			func main() {
+				xs := []float64{1, 2, 3, 4}
+				avg := m.Average(xs)
+				fmt.Println(avg)
+			}
+
+		'm' is the alias.
+
+	4.	You may have noticed that every function in the packages we've 
+		seen starts with a capital letter. In Go, if something starts with
+		a capital letter that means other packages (and programs) are able 
+		to see it. If we had named the function 'average' instead of 'Average'
+		our 'main' program would not have been able to see it.
+
+		It's a good practice to only expose the part of our package that we 
+		want other packages to use and hide everything else. This allows us
+		to freely change those parts later without having to worry about 
+		breaking other programs, and it makes our package easier to use.
+
+	5.	Package names match the folders they fall in. There are ways around
+		this, but it's a lot easier if you stay within this pattern.
+
+Documentation
+Go has the ability to automatically generate documentation for packages we 
+write in a similar way to the standard documentation. On a terminal, run:
+
+		godoc ~/go/src/chapter_11/math Average
+
+We should see information displayed for the function. We can improve the 
+documentation by adding a comment before the function:
+
+		// Finds the average of a series of numbers.
+		func Average(xs []float64) float64 { ... }
+
+If we run 'go install' in the 'math' folder, then re-run the 'godoc' command,
+we should be able to see our comment below the function definition. This 
+documentation is also available in web form by running the command:
+
+		godoc -http=":6060"
+
+and entering the URL into the browser:
+
+		http://localhost:6060/pkg/
+
+We should be able to browse through all the packages installed on our system.

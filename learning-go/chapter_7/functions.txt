@@ -1,0 +1,82 @@
+Inside a function, the := short assignment statement can be
+used in place of a 'var' declaration with implicit type.
+
+Outside a function, every statement begins with a keyword
+('var', 'func', and so on) and so the := construct is not 
+available.
+
+Functions start with the keyword 'func', followed by the
+function's name. The parameters (inputs) of the function are 
+defined like this: 
+	
+	name type, name type, ...
+
+After the parameters we put the return type. Collectively 
+the parameters and the return type are known as the function's
+signiture.
+
+Finally, we have the function body which is a series of 
+statements between curly braces. In this body we can invoke 
+built-in function calls (including invoked errors). Writing
+functions can be difficult, so it's a good idea to break the 
+process into manageable chunks, rather than trying to 
+implement the entire thing in one large step.
+
+Some things to keep in mind:
+- names of parameters do not have to match in the calling
+  function.
+- function do not have access to anything in the calling
+  function.
+- functions are built up in a stack. Each time we call a 
+  function we push it onto the call stack and each time we 
+  return from a function, we pop the last function off of 
+  the stack.
+- we can name the return type.
+
+Returning multiple types
+Multiple values are often used to return an error value 
+along with the result, or a boolean to indicate success.
+
+Variadic functions
+There is a special form for the last parameter in a Go
+function by using '...' (an ellipsis) before the type 
+name of the last parameter we can indicate that it takes 
+zero or more of those parameters. We invoke the function like 
+any other function except we pass as many values as we want.
+
+Closure
+It is also possible to create functions within functions. They 
+can access local variables and values as defined within their 
+scope.
+
+Recursion
+A function is able to call itself.
+
+Defer, Panic & Recover
+Defer - a special Go statement that schedules a function call
+		to be run after the function completes. It is 
+		sometimes used when resources have to freed in some 
+		way, for example, when we open a file we need to be
+		sure to close it later.
+
+			f, _ := os.Open(filename)
+			defer f.Close()
+
+		This has 3 advantages:
+		1. it keeps our 'Close' call near our 'Open' call so
+		   it's easier to understand.
+		2. if our function had multiple return statements
+		   (perhaps one in an 'if' and one in an 'else')
+		   'Close' will happen before both of them.
+		3. Deferred functions are run even if a run-time
+		   panic occurs.
+
+Panic - causes a run-time error. A panic generally indicates a 
+		programmer error, for example, attempting to access an 
+		index of an array that's out of bounds, forgetting to 
+		initialize a map etc., or an exceptional condition that 
+		there's no easy way to recover from (Hence the name "panic").
+Recover - a built-in used to handle a run-time panic. Recover
+		  stops the panic and returns the value that was passed 
+		  to the call to 'panic'.
+

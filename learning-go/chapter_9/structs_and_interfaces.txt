@@ -1,0 +1,163 @@
+Although it would be possible to write programs only using 
+Go's built-in data types, at some point it would become quite
+tedious.
+
+Structs
+A struct is a type which contains named fields, or simply,
+a collection of fields.
+	
+	type Vertex struct {
+		X int
+		Y int
+	}
+
+The 'type' keyword introduces a new type, which is followed 
+by the name of the type, the keyword 'struct' to indicate 
+that we are defining a 'struct' type and a list of fields 
+inside of curly braces. Each field has a name and a type, and 
+these can be collapsed if they have the same type:
+
+	type Vertex struct {
+		X, Y int
+	}
+
+Struct fields are accessed using a dot.
+
+	func main(){
+		v := Vertex{1, 2}
+		v.X = 4
+		fmt.Println(v.X)	// prints 4
+		fmt.Println(v)		// print {4, 2}
+	}
+
+Struct fields can be accessed through a struct pointer. To
+access the field 'X' of a struct when we have the struct 
+pointer 'p' we could write '(*p).X'. However, that notation 
+is cumbersome, so the language permits us instead to write
+just 'p.X', without the explicit dereference.
+
+	func main(){
+		v := Vertex{1, 2}
+		p := &v
+		p.X = 1e9
+		fmt.Println(v)
+	}
+
+Methods
+Go does not have classes. However, we can define methods on types.
+A method is a function call with a special receiver argument. The
+receiver appears in its own argument list between the 'func'
+keyword and the method name. The receiver is like a parameter -
+it has a name and a type - but by creating the function in 
+this way it allows us to call the function using the dot operator.
+Methods can also be declared with non-struct types as well.
+
+NB: You can only declare a method with a receiver whose type is 
+	defined in the same package as the method. You cannot declare a 
+	method with a receiver whose type is defined in another package
+	(which includes the built-in types such as 'int').
+
+We can declare methods with pointer receivers. This means the receiver
+type has the literal syntax '*T' for some type 'T'. (Also, 'T' cannot
+itself be a pointer such as '*int'.)
+
+Methods with pointer receivers can modify the value to which the 
+receiver points. Since methods often need to modify their receiver,
+pointer receivers are more common than value receivers. (see scale.go)
+
+There are two reasons to use a pointer receiver:
+	
+	1. so that the method can modify the value that its receiver
+	   points to
+	2. to avoid copying the value on each method call. This can
+	   be more efficient if the receiver is a large struct, for example.
+
+Embedded Types
+A struct's fields usually represent the has-a-relationship. For 
+example, a 'Circle' has a 'radius'. Suppose we have a person struct:
+
+	type Person struct {
+		Name string
+	}
+
+	func (p *Person) Talk() {
+		fmt.Println("Hi, my name is ", p.Name)
+	}
+
+And we wanted to create a new 'Android' struct. We could do this:
+	
+	type Android struct {
+		Person Person
+		Model string
+	}
+
+This would work, but we would rather say an Android is a Person, 
+rather than an Android has a Person. Go supports relationships like
+this by using an embedded type. Also known as an uanonymous fields, 
+embedded types look like this:
+	
+	type Android struct {
+		Person
+		Model string
+	}
+
+We use the type ('Person') and don't give it a name. When defined 
+this way the 'Person' struct can be accessed using the type name:
+
+	a := new(Android)
+	a.Person.Talk()
+
+But we can also call any 'Person' methods directly on 'Android':
+
+	a := new(Android)
+	a.Talk()
+
+The is-a relationship works this way intuitively:
+	
+	People can talk, an android is a person, therefore an
+	android can talk.
+
+Indirection
+Comparing 'scale.go' and 'scale_2.go', you will notice that functions
+with a pointer argument must take a pointer:
+
+	var v Vertex
+	ScaleFunc(v, 5) 	// Compile Error!
+	ScaleFunc(&v, 5) 	// OK
+
+while methods with pointer receivers take either a value or a 
+pointer as the receiver when they are called:
+
+	var v Vertex
+	v.Scale(5)			// OK
+	p := &v
+	p.Scale(10)			// OK
+
+For the statement 'v.Scale(5)', even though 'v' is a value and not 
+a pointer, the method with the pointer receiver is called automatically.
+That is, as a convenience, Go interprets the statement 'v.Scale(5)' as 
+'(&v).Scale(5)' since the 'Scale' method has a pointer receiver. (see scale_3.go)
+
+The equivalent thing happens in the reverse direction. Functions that take a 
+value argument must take a value of that specific type, while methods with 
+value receivers take either a value or a pointer as the receiver when they 
+are called.
+
+Interface
+An interface type is defined as a set of method signatures.
+A value of interface type can hold any value that implements these methods.
+A type implements an interface by implementing its methods. There is no 
+explicit declaration of intent, no "implements" keyword.
+
+Implicit interfaces decouple the definition of an interface from its
+implementation, which could then appear in any package without prearrangement.
+(see interfaces_are_satisfied_implicitly.go)
+
+Under the covers, interface values can be thought of as a tuple of a value and 
+a concrete type:
+
+		(value, type)
+
+An interface value holds a value of a specific underlying concrete type. Calling
+a method on an interface value executes the method on the same name as its 
+underlying type.

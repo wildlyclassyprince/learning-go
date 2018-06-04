@@ -1,0 +1,43 @@
+Go has pointers. A pointer holds the memory address of a value.
+
+The type '*T' is a pointer to a 'T' value. Its zero value is 'nil'.
+
+	var p *int
+
+The '&' operator generates a pointer to its operand.
+
+	i := 42
+	p = &i
+
+The '*' operator denotes the pointer's underlying value.
+
+	fmt.Println(*p) // read i through the pointer p
+	*p = 21 		// set i through the pointer p
+
+This is known as "dereferencing" or "indirecting".
+
+Unlike C, Go has no pointer arithmetic.
+
+Another way to get a pointer is to use the built-in 'new' function:
+
+	func one(xPtr *int){
+		*xPtr = 1
+	}
+
+	func main(){
+		xPtr := new(int)
+		one(xPtr)
+		fmt.Println(*xPtr) //x is 1
+	}
+
+'new' takes a type as an argument, allocates enough memory to fit
+a value of that type and returns a pointer to it.
+
+In some programming languages there is a significant difference
+between using 'new' and '&', with great care being needed to 
+eventually delete anything created with 'new'. Go is not like this,
+it's a garbage collected programming language which means memory is
+cleaned up automatically when nothing refers to it anymore.
+
+Pointers are rarely used with Go's built-in types, but are extremely
+useful when paired with structs.
