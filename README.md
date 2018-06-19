@@ -5,7 +5,7 @@ To run:
 
 	go run <filename>.go [Enter]
 
-To compile:
+To build:
 
 	go build [Enter]
 
