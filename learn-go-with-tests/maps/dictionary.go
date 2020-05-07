@@ -1,6 +1,9 @@
 package main
 
+// Dictionary mapper
+type Dictionary map[string]string
+
 // Search retrieves the value of the specified key word
-func Search(dictionary map[string]string, word string) string {
-	return dictionary[word]
+func (d Dictionary) Search(word string) string {
+	return d[word]
 }
