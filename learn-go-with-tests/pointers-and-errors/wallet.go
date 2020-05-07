@@ -6,11 +6,12 @@ type Wallet struct {
 }
 
 // Deposit method
-func (w Wallet) Deposit(amount float64) int {
-	return 0
+func (w *Wallet) Deposit(amount int) int {
+	w.balance += amount
+	return w.balance
 }
 
 // Balance method
-func (w Wallet) Balance() int {
-	return 0
+func (w *Wallet) Balance() int {
+	return w.balance
 }
