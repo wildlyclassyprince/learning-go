@@ -1,13 +1,18 @@
 # learning-go
 Source files and notes for learning Go
 
-To run:
+Quick run:
 
-	go run <filename>.go [Enter]
+	go run <filename>
 
-To build:
+Build then run:
 
-	go build [Enter]
+	go build <filename>
+	./<buildname>
+
+Verbose tests with coverage and benchmark:
+
+	go test -v -cover -bench=.
 
 To read function documentation:
 
