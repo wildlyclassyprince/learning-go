@@ -2,6 +2,7 @@ package iteration
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -33,7 +34,7 @@ func BenchmarkRepeat(b *testing.B) {
 }
 
 func ExampleRepeat() {
-	reps := Repeat("k", 10)
-	fmt.Println(reps)
-	//Output: kkkkkkkkkk
+	syllables := []string{"ba", Repeat("na", 2)}
+	fmt.Println(strings.Join(syllables, ""))
+	//Output: banana
 }
