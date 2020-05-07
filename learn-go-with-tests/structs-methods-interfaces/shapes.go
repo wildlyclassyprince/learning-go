@@ -27,3 +27,8 @@ type Circle struct {
 func (c Circle) Area() float64 {
 	return math.Pi * c.Radius * c.Radius
 }
+
+// Shape defines a shape interface. In our case, a shape is a struct with an Area() method.
+type Shape interface {
+	Area() float64
+}
