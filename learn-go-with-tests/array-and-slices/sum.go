@@ -3,8 +3,8 @@ package main
 // Sum adds elements of an array and returns the result
 func Sum(numbers [5]int) int {
 	sum := 0
-	for i := 0; i < 5; i++ {
-		sum += numbers[i]
+	for _, number := range numbers {
+		sum += number
 	}
-	return 0
+	return sum
 }
