@@ -28,6 +28,17 @@ func (c Circle) Area() float64 {
 	return math.Pi * c.Radius * c.Radius
 }
 
+// Triangle encapsulates the properties of a triangle
+type Triangle struct {
+	Height float64
+	Base   float64
+}
+
+// Area method calculates the area of a triangle given the base and height
+func (t Triangle) Area() float64 {
+	return 0.5 * t.Base * t.Height
+}
+
 // Shape defines a shape interface. In our case, a shape is a struct with an Area() method.
 type Shape interface {
 	Area() float64
