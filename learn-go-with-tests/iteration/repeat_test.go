@@ -6,12 +6,24 @@ import (
 )
 
 func TestRepeat(t *testing.T) {
-	repeated := Repeat("a", 5)
-	expected := "aaaaa"
-
-	if repeated != expected {
-		t.Errorf("expected %q but got %q", expected, repeated)
+	assertionCorrectMessage := func(t *testing.T, expected, repeated string) {
+		t.Helper()
+		if repeated != expected {
+			t.Errorf("expected %q but got %q", expected, repeated)
+		}
 	}
+
+	t.Run("single character repeated N times", func(t *testing.T) {
+		repeated := Repeat("a", 5)
+		expected := "aaaaa"
+		assertionCorrectMessage(t, expected, repeated)
+	})
+
+	t.Run("word repeated N times", func(t *testing.T) {
+		repeated := Repeat("smile", 2)
+		expected := "smilesmile"
+		assertionCorrectMessage(t, expected, repeated)
+	})
 }
 
 func BenchmarkRepeat(b *testing.B) {
