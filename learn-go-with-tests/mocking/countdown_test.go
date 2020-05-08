@@ -2,27 +2,65 @@ package main
 
 import (
 	"bytes"
+	"reflect"
 	"testing"
+	"time"
 )
 
 func TestCountdown(t *testing.T) {
-	buffer := &bytes.Buffer{}
-	spySleeper := &SpySleeper{}
+	t.Run("sleep before every print", func(t *testing.T) {
+		spySleepPrinter := &CountdownOperationsSpy{}
+		Countdown(spySleepPrinter, spySleepPrinter)
 
-	Countdown(buffer, spySleeper)
+		want := []string{
+			sleep,
+			write,
+			sleep,
+			write,
+			sleep,
+			write,
+			sleep,
+			write,
+		}
 
-	got := buffer.String()
-	want := `3
+		if !reflect.DeepEqual(want, spySleepPrinter.Calls) {
+			t.Errorf("wanted calls %v got %v", want, spySleepPrinter.Calls)
+		}
+	})
+
+	t.Run("prints 3 to Go!", func(t *testing.T) {
+
+		buffer := &bytes.Buffer{}
+		spySleeper := &SpySleeper{}
+
+		Countdown(buffer, spySleeper)
+
+		got := buffer.String()
+		want := `3
 2
 1
 Go!`
 
-	if got != want {
-		t.Errorf("got %q want %q", got, want)
-	}
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
 
-	if spySleeper.Calls != 4 {
-		t.Errorf("not enough calls to sleeper, want 4 got %d", spySleeper.Calls)
+		if spySleeper.Calls != 4 {
+			t.Errorf("not enough calls to sleeper, want 4 got %d", spySleeper.Calls)
+		}
+
+	})
+}
+
+func TestConfigurableSleeper(t *testing.T) {
+	sleepTime := 5 * time.Second
+
+	spyTime := &SpyTime{}
+	sleeper := ConfigurableSleeper{sleepTime, spyTime.Sleep}
+	sleeper.Sleep()
+
+	if spyTime.durationSlept != sleepTime {
+		t.Errorf("should have slept for %v but slept for %v", sleepTime, spyTime.durationSlept)
 	}
 }
 
@@ -34,3 +72,42 @@ type SpySleeper struct {
 func (s *SpySleeper) Sleep() {
 	s.Calls++
 }
+
+// CountdownOperationsSpy spies on output
+type CountdownOperationsSpy struct {
+	Calls []string
+}
+
+// Sleep method for CountdownOperationsSpy
+func (s *CountdownOperationsSpy) Sleep() {
+	s.Calls = append(s.Calls, sleep)
+}
+
+// Write method for CountdownOperationsSpy
+func (s *CountdownOperationsSpy) Write(p []byte) (n int, err error) {
+	s.Calls = append(s.Calls, write)
+	return
+}
+
+// ConfigurableSleeper makes sleeper configurable
+type ConfigurableSleeper struct {
+	duration time.Duration
+	sleep    func(time.Duration)
+}
+
+func (c *ConfigurableSleeper) Sleep() {
+	c.sleep(c.duration)
+}
+
+// SpyTime spies on time configured for sleeper
+type SpyTime struct {
+	durationSlept time.Duration
+}
+
+// Sleep method implements SpyTime
+func (s *SpyTime) Sleep(duration time.Duration) {
+	s.durationSlept = duration
+}
+
+const write = "write"
+const sleep = "sleep"
