@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+const write = "write"
+const sleep = "sleep"
+
 func TestCountdown(t *testing.T) {
 	t.Run("sleep before every print", func(t *testing.T) {
 		spySleepPrinter := &CountdownOperationsSpy{}
@@ -98,6 +101,3 @@ type SpyTime struct {
 func (s *SpyTime) Sleep(duration time.Duration) {
 	s.durationSlept = duration
 }
-
-const write = "write"
-const sleep = "sleep"
