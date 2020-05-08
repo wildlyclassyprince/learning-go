@@ -89,16 +89,6 @@ func (s *CountdownOperationsSpy) Write(p []byte) (n int, err error) {
 	return
 }
 
-// ConfigurableSleeper makes sleeper configurable
-type ConfigurableSleeper struct {
-	duration time.Duration
-	sleep    func(time.Duration)
-}
-
-func (c *ConfigurableSleeper) Sleep() {
-	c.sleep(c.duration)
-}
-
 // SpyTime spies on time configured for sleeper
 type SpyTime struct {
 	durationSlept time.Duration
