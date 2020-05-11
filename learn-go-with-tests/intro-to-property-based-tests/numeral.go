@@ -1,12 +1,14 @@
 package main
 
+import "strings"
+
 // ConvertToRoman converts Arabic numerals to Roman numerals
 func ConvertToRoman(arabic int) string {
-	if arabic == 3 {
-		return "III"
+	var result strings.Builder
+
+	for i := 0; i < arabic; i++ {
+		result.WriteString("I")
 	}
-	if arabic == 2 {
-		return "II"
-	}
-	return "I"
+
+	return result.String()
 }
