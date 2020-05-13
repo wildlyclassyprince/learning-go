@@ -12,7 +12,10 @@ func Server(store Store) http.HandleFunc {
 	}
 }
 
+<<<<<<< HEAD
 // 
+=======
+>>>>>>> context
 type Store interface {
 	Fetch() string
 	Cancel()
