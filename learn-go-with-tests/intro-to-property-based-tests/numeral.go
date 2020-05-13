@@ -37,3 +37,8 @@ func ConvertToRoman(arabic int) string {
 
 	return result.String()
 }
+
+// ConvertToArabic converts Roman numerals to Arabic numerals
+func ConvertToArabic(roman string) int {
+	return 1
+}
