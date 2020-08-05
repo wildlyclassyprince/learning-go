@@ -26,3 +26,7 @@ Versus:
 Both snippets accomplish the same but the first option can be generated even when working with a space sensitive language like Python.
 
 In the first snippet we are telling the template package that we don't want all spaces between the `Name` variable and whatever comes after it by putting the minus character at the front of the else keyword, and we are also doing the same with the end keyword on the second to last line.
+
+## `range` action
+
+The most common source of confusion with the `range` action is that we are accessing individual attributes of a widget without needing to use an index or any other accessor inside the `.Widgets` value. This is because the `range` action will set the value of each object in the collection to the (`.`) inside of the range block. For example, if you were to render `{{.}}` inside of the range block you would see the same output as if you used `fmt.Println()` on a `Widget` object.
