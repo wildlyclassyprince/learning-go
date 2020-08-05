@@ -26,8 +26,9 @@ func main() {
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	vd := ViewData{"John Smith"}
-	err := testTemplate.Execute(w, vd)
+	//vd := ViewData{"John Smith"}
+	//err := testTemplate.Execute(w, vd)
+	err := testTemplate.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
