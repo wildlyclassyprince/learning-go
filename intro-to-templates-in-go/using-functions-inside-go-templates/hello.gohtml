@@ -1,4 +1,4 @@
-{{if .User.HasPermission "feature-a"}}
+{{if (call .User.HasPermission "feature-a")}}
     <div class="feature">
         <h3>Feature A</h3>
         <p>Some other stuff here ... </p>
@@ -10,7 +10,7 @@
     <div>
 {{end}}
 
-{{if .User.HasPermission "feature-b"}}
+{{if (call .User.HasPermission "feature-b")}}
     <div class="feature">
         <h3>Feature B</h3>
         <p>Some other stuff here ...</p>

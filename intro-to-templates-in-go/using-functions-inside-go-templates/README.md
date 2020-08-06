@@ -41,3 +41,32 @@ In this tutorial we are going to cover how to use template functions like `and`,
     </p>
 {{end}}
 ```
+
+## Using function variables
+**1. Create a method on the `User` type**
+
+This is the simplest - lets say you have a `User` type that we already provided to the view, we can just add a `HasPermission()` method to the object and then use that.
+
+**2. Calling function variables and fields**
+
+Imagine that for whatever reason that you can't the first approach because your method for determining logic needs to change at times. In this case it makes sense to creat a `HasPermission func(string) bool` attribute on the `User` type and assign it with a function.
+
+When we assign functions to variables, we need to tell the `html/template` package that we want to call the function. Remember to add `call` right after the `if` statements like this:
+
+```HTML
+{{if (call .User.HasPermission "feature-a")}}
+
+...
+
+{{if (call .User.HasPermission "feature-b")}}
+
+...
+
+```
+
+---
+**Parenthesis can be used in templates**
+
+While parenthesis aren't generally required in Go templates, they can be incredibly useful for making it clear which arguments need to be passed into which functions and specifying a clear order of operations.
+
+---

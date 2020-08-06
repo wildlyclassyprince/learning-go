@@ -14,17 +14,9 @@ type ViewData struct {
 
 // User struct just for testing
 type User struct {
-	ID    int
-	Email string
-}
-
-// HasPermission determines
-func (u User) HasPermission(feature string) bool {
-	if feature == "feature-a" {
-		return true
-	} else {
-		return false
-	}
+	ID            int
+	Email         string
+	HasPermission func(string) bool
 }
 
 func main() {
@@ -43,7 +35,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
 	vd := ViewData{
-		User: User{1, "jon@calhoun.io"},
+		User: User{
+			ID:    1,
+			Email: "jon@calhoun.io",
+			HasPermission: func(feature string) bool {
+				if feature == "feature-b" {
+					return true
+				}
+				return false
+			},
+		},
 	}
 	err := testTemplate.Execute(w, vd)
 	if err != nil {
