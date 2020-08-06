@@ -70,3 +70,16 @@ When we assign functions to variables, we need to tell the `html/template` packa
 While parenthesis aren't generally required in Go templates, they can be incredibly useful for making it clear which arguments need to be passed into which functions and specifying a clear order of operations.
 
 ---
+
+**3. Creating custom functions with a `template.FuncMap`**
+
+The final way of calling our own functions is creating custom functions with a `tmeplate.FuncMap`. This can be the most useful and powerful way to define functions because it allows us to create global helper methods that can be used throughout the app.
+
+---
+**Define functions before parsing templates**
+
+In previous examples we were creating our template by calling the `template.ParseFiles` function provided by the `html/template` package. This is a package level function and returns a template after parsing the files. Now we are calling the ParseFiles method on the `template.Template` type, which has the same return values but applies the changes to the existing template (rather than a brand new one) and then returns the result.
+
+In this situation we need to use the method because we need to define any plan to use in our templates, and once we do this with the template package it will return a `*template.Template`. After defining those custom functions we can then proceed to parse template that make use of the functions. If we were to first parse the templates you would see an error related to an undefined function being called in your template.
+
+---

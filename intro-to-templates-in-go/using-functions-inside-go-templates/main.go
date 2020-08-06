@@ -14,15 +14,21 @@ type ViewData struct {
 
 // User struct just for testing
 type User struct {
-	ID            int
-	Email         string
-	HasPermission func(string) bool
+	ID    int
+	Email string
 }
 
 func main() {
 	var err error
 
-	testTemplate, err = template.ParseFiles("hello.gohtml")
+	testTemplate, err = template.New("hello.gohtml").Funcs(template.FuncMap{
+		"hasPermission": func(user User, feature string) bool {
+			if user.ID == 1 && feature == "feature-a" {
+				return true
+			}
+			return false
+		},
+	}).ParseFiles("hello.gohtml")
 	if err != nil {
 		panic(err)
 	}
@@ -34,18 +40,11 @@ func main() {
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	vd := ViewData{
-		User: User{
-			ID:    1,
-			Email: "jon@calhoun.io",
-			HasPermission: func(feature string) bool {
-				if feature == "feature-b" {
-					return true
-				}
-				return false
-			},
-		},
+	user := User{
+		ID:    1,
+		Email: "jon@calhoun.io",
 	}
+	vd := ViewData{user}
 	err := testTemplate.Execute(w, vd)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
