@@ -7,14 +7,24 @@ import (
 
 var testTemplate *template.Template
 
-// User struct for testing
-type User struct {
-	Admin bool
-}
-
 // ViewData struct for testing data view
 type ViewData struct {
-	*User
+	User User
+}
+
+// User struct just for testing
+type User struct {
+	ID    int
+	Email string
+}
+
+// HasPermission determines
+func (u User) HasPermission(feature string) bool {
+	if feature == "feature-a" {
+		return true
+	} else {
+		return false
+	}
 }
 
 func main() {
@@ -32,7 +42,9 @@ func main() {
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	vd := ViewData{&User{false}}
+	vd := ViewData{
+		User: User{1, "jon@calhoun.io"},
+	}
 	err := testTemplate.Execute(w, vd)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
