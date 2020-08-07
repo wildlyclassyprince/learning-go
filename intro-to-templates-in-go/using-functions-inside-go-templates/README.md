@@ -92,3 +92,12 @@ Our function would be much simpler if we could simplify it and only need to pass
 
 The first thing we need to do is create a function for when no `User` is present. We will set this in the `template.FuncMap` before parsing our template so that we don't get parsing errors, and to make sure we have some logic in place in case the user is not available.
 
+---
+> :warining: **Potential race condition!**
+> It should be noted here that if you don't clone the template **before** calling `Funcs` that you can potentially run into a race condition where multiple web requests are all trying to set different FuncMaps for the template. The final result could be that a user gets access to something they shouldn't have access to. This is possible for two reasons:
+>
+>1. Web requests are handled in goroutines by default, so your server will automatically be processing multiple requests at the same time.
+>2. We are adding a `FuncMap` with a closure that uses the `user` variable. In previous examples we passed the user into the function so this race condition wasn't possible.
+>
+> This is pretty easy to fix with a `Clone`, but it might be worth nothing in your code not to remove the call to `Clone`.
+---
