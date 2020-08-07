@@ -83,3 +83,12 @@ In previous examples we were creating our template by calling the `template.Pars
 In this situation we need to use the method because we need to define any plan to use in our templates, and once we do this with the template package it will return a `*template.Template`. After defining those custom functions we can then proceed to parse template that make use of the functions. If we were to first parse the templates you would see an error related to an undefined function being called in your template.
 
 ---
+
+## Making our functions globally useful
+
+The `hasPermission` function defined in the last section is great, but one problem with it is that we can only use it when we have access to the `User` object as well. Passing this around might not be too bad at first, but as the app grows it will end up having many templates and it is pretty easy to forget to pass the `User` object to a template, or to miss it on a nested template.
+
+Our function would be much simpler if we could simplify it and only need to pass in a feature name.
+
+The first thing we need to do is create a function for when no `User` is present. We will set this in the `template.FuncMap` before parsing our template so that we don't get parsing errors, and to make sure we have some logic in place in case the user is not available.
+

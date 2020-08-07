@@ -23,9 +23,6 @@ func main() {
 
 	testTemplate, err = template.New("hello.gohtml").Funcs(template.FuncMap{
 		"hasPermission": func(user User, feature string) bool {
-			if user.ID == 1 && feature == "feature-a" {
-				return true
-			}
 			return false
 		},
 	}).ParseFiles("hello.gohtml")
@@ -45,7 +42,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		Email: "jon@calhoun.io",
 	}
 	vd := ViewData{user}
-	err := testTemplate.Execute(w, vd)
+	// We need to clone the template before setting a user-specific
+	// FuncMap to avoid any potential race conditions.
+	err := template.Must(testTemplate.Clone()).Funcs(template.FuncMap{
+		"hasPermission": func(feature string) bool {
+			if user.ID == 1 && feature == "feature-a" {
+				return true
+			}
+			return false
+		},
+	}).Execute(w, vd)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
