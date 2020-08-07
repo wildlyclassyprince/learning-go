@@ -94,6 +94,7 @@ The first thing we need to do is create a function for when no `User` is present
 
 ---
 > :warning: **Potential race condition!**
+>
 > It should be noted here that if you don't clone the template **before** calling `Funcs` that you can potentially run into a race condition where multiple web requests are all trying to set different FuncMaps for the template. The final result could be that a user gets access to something they shouldn't have access to. This is possible for two reasons:
 >
 >1. Web requests are handled in goroutines by default, so your server will automatically be processing multiple requests at the same time.
