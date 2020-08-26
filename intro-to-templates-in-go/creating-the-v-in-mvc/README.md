@@ -33,3 +33,4 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 This should look familiar with one exception - we are executing a specific template, and we pass in the name of that template as the second argument. In previous parts of this tutorial we would instead execute the default template, but we want to use the specific "bootstrap" template now.
 
+## Yielding dynamic content in a layout
